@@ -1,0 +1,75 @@
+name: Bug report
+description: Something did not work, or SweepLab touched more/less than it should have.
+title: '[Bug]: '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Data-loss reports go to [SECURITY.md](https://github.com/quangminh1212/SweepLab/blob/main/SECURITY.md)
+        instead of the public issue tracker.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: Include the command you ran and the output you got.
+      placeholder: |
+        PS> ./scripts/sweeplab.ps1 scan -Category user-temp
+        ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+    validations:
+      required: true
+
+  - type: dropdown
+    id: shell
+    attributes:
+      label: Shell
+      options:
+        - Windows PowerShell 5.1
+        - PowerShell 7
+        - Other (describe below)
+    validations:
+      required: true
+
+  - type: input
+    id: sweeplab-version
+    attributes:
+      label: SweepLab version
+      description: '`(Get-Module SweepLab).Version` or the tag you cloned.'
+    validations:
+      required: true
+
+  - type: input
+    id: windows-version
+    attributes:
+      label: Windows version
+      description: '`(Get-CimInstance Win32_OperatingSystem).Caption` plus build number.'
+    validations:
+      required: true
+
+  - type: dropdown
+    id: might-delete
+    attributes:
+      label: Did this involve a delete command?
+      options:
+        - 'No - scan/report only'
+        - 'Yes - but only -WhatIf / a refused command'
+        - 'Yes - -Delete or -Confirm:$false actually ran'
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary-output
+    attributes:
+      label: Removal summary (only for delete runs)
+      description: Paste the `SweepLab.RemovalSummary` objects, they show what was deleted, missing and failed.
+      render: text
+    validations:
+      required: false

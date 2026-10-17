@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Publish release
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate manifest version against tag
+        shell: pwsh
+        run: |
+          $manifest = Import-PowerShellDataFile -Path ./src/SweepLab/SweepLab.psd1
+          $tag = "${{ github.ref_name }}".TrimStart('v')
+          if ($manifest.ModuleVersion -ne $tag) {
+            throw "Manifest ModuleVersion '$($manifest.ModuleVersion)' does not match tag '$tag'."
+          }
+          Write-Host "Version $tag matches the manifest."
+
+      - name: Package module
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path dist -Force | Out-Null
+          Compress-Archive -Path ./src/SweepLab/* -DestinationPath "dist/SweepLab-$env:GITHUB_REF_NAME.zip"
+
+      - name: Create GitHub release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create $env:GITHUB_REF_NAME `
+            --title "SweepLab $env:GITHUB_REF_NAME" `
+            --generate-notes `
+            dist/*.zip

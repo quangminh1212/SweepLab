@@ -1,0 +1,26 @@
+# Scratch and per-machine scan output
+tmp/
+data/scratch/
+data/reports/local/
+
+# Scan reports: the durable Markdown summary is committed, the CSV detail is not
+data/reports/**/*.csv
+
+# Build output / packaging
+dist/
+out/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.tmp.dir/
+
+# PowerShell authoring noise
+*.ps1xml~
+*.dll
+*.pdb
+
+# OS noise
+Thumbs.db
+desktop.ini
+.DS_Store
