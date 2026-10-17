@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `CODE_OF_CONDUCT.md` - Contributor Covenant 2.1, with a section that points
+  deletion-related reports at the private channel in `SECURITY.md`. Both READMEs
+  now carry a Community section linking to it.
+- `.github/dependabot.yml` - monthly Dependabot pull requests for the GitHub
+  Actions used by CI and the release workflow.
+
+### Changed
+
+- CI and release workflows run on `actions/checkout@v7` instead of `@v4`, which
+  moves them off the deprecated Node 20 runtime.
+
 ### Fixed
 
 - `Export-SweepReport` no longer fails on PowerShell 7 when a supplied collection

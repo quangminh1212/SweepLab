@@ -67,6 +67,13 @@ Reference the issue number when one exists.
 - Describe which real folder you tested the change against and what the scan
   reported before and after.
 
+## Code of conduct
+
+Participation is covered by `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1).
+Reports about a deletion that should not have happened go through the private
+channel in `SECURITY.md`; anything else goes to the enforcement contact listed in
+the code of conduct.
+
 ## Security
 
 Do not open a public issue for a path-traversal or data-loss bug. Follow

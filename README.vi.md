@@ -151,6 +151,10 @@ docs/                   danh mục target và cam kết an toàn
 data/reports/local/     báo cáo sinh ra (git bỏ qua)
 ```
 
+## Cộng đồng
+
+Dự án tuân theo [Quy tắc ứng xử Contributor Covenant](CODE_OF_CONDUCT.md). Khi tham gia - issue, pull request, review - bạn đồng ý tuân thủ quy tắc này. Báo cáo hành vi không phù hợp qua [form advisory riêng tư](https://github.com/quangminh1212/SweepLab/security/advisories/new) hoặc tới GitHub Trust & Safety.
+
 ## Giấy phép
 
 MIT - xem [LICENSE](LICENSE).

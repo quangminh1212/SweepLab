@@ -153,6 +153,13 @@ docs/                   target catalogue and safety contract
 data/reports/local/     generated reports (git-ignored)
 ```
 
+## Community
+
+This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md).
+By taking part - issues, pull requests, reviews - you agree to uphold it. Report
+unacceptable behaviour through the [private advisory form](https://github.com/quangminh1212/SweepLab/security/advisories/new)
+or to GitHub Trust & Safety.
+
 ## License
 
 MIT - see [LICENSE](LICENSE).
