@@ -136,6 +136,8 @@ Invoke-Pester -Path ./tests
 Invoke-ScriptAnalyzer -Path ./src -Recurse -Settings ./PSScriptAnalyzerSettings.psd1
 ```
 
+`./scripts/ci/Invoke-SweepLabTests.ps1` chạy đúng bộ test mà CI dùng và báo lỗi nếu thiếu bản Pester phù hợp. CI chạy script này một lần trên PowerShell 7 và một lần trên Windows PowerShell 5.1.
+
 Xem [CONTRIBUTING.md](CONTRIBUTING.md). File trong module là ASCII thuần và pass PSScriptAnalyzer với 0 cảnh báo theo cấu hình đã commit, trên cả Windows PowerShell 5.1 lẫn PowerShell 7.
 
 ## Cấu trúc repo
@@ -143,6 +145,7 @@ Xem [CONTRIBUTING.md](CONTRIBUTING.md). File trong module là ASCII thuần và 
 ```
 src/SweepLab/           module: Private/ là helper, Public/ là lệnh, manifest
 scripts/sweeplab.ps1    lớp dòng lệnh
+scripts/ci/             điểm vào cho CI (script chạy test)
 tests/                  bộ test Pester
 docs/                   danh mục target và cam kết an toàn
 data/reports/local/     báo cáo sinh ra (git bỏ qua)

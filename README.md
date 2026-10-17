@@ -138,6 +138,8 @@ Invoke-Pester -Path ./tests
 Invoke-ScriptAnalyzer -Path ./src -Recurse -Settings ./PSScriptAnalyzerSettings.psd1
 ```
 
+`./scripts/ci/Invoke-SweepLabTests.ps1` runs the same suite the way CI does and fails when a suitable Pester version is missing. CI executes it once on PowerShell 7 and once on Windows PowerShell 5.1.
+
 See [CONTRIBUTING.md](CONTRIBUTING.md). Module files are pure ASCII and pass PSScriptAnalyzer with zero findings under the checked-in settings, on both Windows PowerShell 5.1 and PowerShell 7.
 
 ## Repository layout
@@ -145,6 +147,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). Module files are pure ASCII and pass PSS
 ```
 src/SweepLab/           module: Private/ helpers, Public/ commands, manifest
 scripts/sweeplab.ps1    command-line front end
+scripts/ci/             CI entry points (test runner)
 tests/                  Pester test suite
 docs/                   target catalogue and safety contract
 data/reports/local/     generated reports (git-ignored)

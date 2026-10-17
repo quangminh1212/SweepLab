@@ -14,7 +14,7 @@ jobs:
     name: PSScriptAnalyzer
     runs-on: windows-latest
     steps:
-      - name: Checkout
+      - name: Check out repository
         uses: actions/checkout@v4
 
       - name: Install PSScriptAnalyzer
@@ -22,45 +22,45 @@ jobs:
         run: |
           Set-PSRepository -Name PSGallery -InstallationPolicy Trusted -ErrorAction SilentlyContinue
           Install-Module PSScriptAnalyzer -MinimumVersion 1.22.0 -Force -Scope CurrentUser
+          Get-Module -ListAvailable PSScriptAnalyzer | Select-Object Name, Version
 
-      - name: Run PSScriptAnalyzer
+      - name: Analyze module source
         shell: pwsh
         run: |
-          $findings = @(
-            Invoke-ScriptAnalyzer -Path ./src -Recurse -Settings ./PSScriptAnalyzerSettings.psd1
-            Invoke-ScriptAnalyzer -Path ./scripts -Recurse -Settings ./PSScriptAnalyzerSettings.psd1
-          )
-          if ($findings.Count -gt 0) {
-            $findings | Format-Table RuleName, Severity, ScriptName, Line, Message -AutoSize |
-              Out-String -Width 200 | Write-Host
-            throw "$($findings.Count) PSScriptAnalyzer finding(s)."
-          }
-          Write-Host 'PSScriptAnalyzer: clean.'
+          $findings = Invoke-ScriptAnalyzer -Path ./src -Recurse -Settings ./PSScriptAnalyzerSettings.psd1
+          $findings | Format-Table -AutoSize | Out-String -Width 200 | Write-Host
+          if ($findings) { throw "$($findings.Count) PSScriptAnalyzer finding(s) in ./src." }
+
+      - name: Analyze scripts
+        shell: pwsh
+        run: |
+          $findings = Invoke-ScriptAnalyzer -Path ./scripts -Recurse -Settings ./PSScriptAnalyzerSettings.psd1
+          $findings | Format-Table -AutoSize | Out-String -Width 200 | Write-Host
+          if ($findings) { throw "$($findings.Count) PSScriptAnalyzer finding(s) in ./scripts." }
 
   test:
-    name: Pester (${{ matrix.shell }})
+    name: Pester
     runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        shell: [pwsh, powershell]
     steps:
-      - name: Checkout
+      - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Install Pester
-        shell: ${{ matrix.shell }}
+      - name: Install Pester for PowerShell 7
+        shell: pwsh
         run: |
           Set-PSRepository -Name PSGallery -InstallationPolicy Trusted -ErrorAction SilentlyContinue
           Install-Module Pester -MinimumVersion 5.5.0 -Force -Scope CurrentUser -SkipPublisherCheck
-          Import-Module Pester -MinimumVersion 5.5.0
 
-      - name: Run tests
-        shell: ${{ matrix.shell }}
+      - name: Run test suite on PowerShell 7
+        shell: pwsh
+        run: ./scripts/ci/Invoke-SweepLabTests.ps1 -Path ./tests -Verbosity Detailed
+
+      - name: Install Pester for Windows PowerShell
+        shell: powershell
         run: |
-          Import-Module Pester -MinimumVersion 5.5.0
-          $config = New-PesterConfiguration
-          $config.Run.Path = './tests'
-          $config.Run.Exit = $true
-          $config.Output.Verbosity = 'Detailed'
-          Invoke-Pester -Configuration $config
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted -ErrorAction SilentlyContinue
+          Install-Module Pester -MinimumVersion 5.5.0 -Force -Scope CurrentUser -SkipPublisherCheck
+
+      - name: Run test suite on Windows PowerShell 5.1
+        shell: powershell
+        run: ./scripts/ci/Invoke-SweepLabTests.ps1 -Path ./tests -Verbosity Detailed
