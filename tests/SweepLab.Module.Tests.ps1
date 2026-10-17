@@ -277,4 +277,19 @@ Describe 'Export-SweepReport' {
         Test-Path -LiteralPath (Join-Path $output 'probe.md') | Should -BeTrue
         Test-Path -LiteralPath (Join-Path $output 'probe-junk.csv') | Should -BeTrue
     }
+
+    It 'ignores a null entry inside a supplied collection' {
+        $root = Join-Path $TestDrive 'export-null-source'
+        Add-SweepTestFile -Root $root -RelativePath 'old.txt' -Old
+        $output = Join-Path $TestDrive 'export-null-out'
+        $items = @(Get-SweepJunk -Category custom -Path $root -MinAgeHours 24)
+        $mixed = @($null) + $items
+
+        $written = @(Export-SweepReport -Junk $mixed -OutputDirectory $output -Name 'nullsafe')
+
+        $written.Count | Should -BeGreaterThan 0
+        Test-Path -LiteralPath (Join-Path $output 'nullsafe.md') | Should -BeTrue
+        $markdown = Get-Content -LiteralPath (Join-Path $output 'nullsafe.md') -Raw
+        $markdown | Should -Match '- Files: 1'
+    }
 }

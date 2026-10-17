@@ -97,11 +97,14 @@ function Export-SweepReport {
     }
 
     end {
-        if ($pipedJunk.Count -gt 0) { $Junk = @($Junk) + $pipedJunk.ToArray() }
-        if ($pipedBuild.Count -gt 0) { $BuildArtifact = @($BuildArtifact) + $pipedBuild.ToArray() }
-        if ($pipedSpace.Count -gt 0) { $SpaceReport = @($SpaceReport) + $pipedSpace.ToArray() }
+        # A parameter that was never bound is $null, and PowerShell 7 keeps a
+        # null placeholder when such a value is concatenated into an array.
+        # Merge through the helper so no placeholder can reach the loops below.
+        $Junk = @(Merge-SweepItemCollection -Primary $Junk -Additional $pipedJunk.ToArray())
+        $BuildArtifact = @(Merge-SweepItemCollection -Primary $BuildArtifact -Additional $pipedBuild.ToArray())
+        $SpaceReport = @(Merge-SweepItemCollection -Primary $SpaceReport -Additional $pipedSpace.ToArray())
 
-        if (-not $Junk -and -not $BuildArtifact -and -not $SpaceReport) {
+        if ($Junk.Count -eq 0 -and $BuildArtifact.Count -eq 0 -and $SpaceReport.Count -eq 0) {
             Write-Error 'Nothing to export. Pass -Junk, -BuildArtifact or -SpaceReport, or pipe scan results in.'
             return
         }

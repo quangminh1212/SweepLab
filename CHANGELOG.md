@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `Export-SweepReport` no longer fails on PowerShell 7 when a supplied collection
+  contains a `$null` entry, which happened whenever the items arrived through the
+  pipeline and the matching parameter stayed unbound. Null entries are now dropped
+  while the parameter and pipeline collections are merged.
+
 ### Planned
 
 - Admin-assisted cleanup guidance for `hiberfil.sys`, `C:\Windows\Installer` and
